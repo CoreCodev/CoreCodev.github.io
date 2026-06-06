@@ -32,7 +32,7 @@ El diseño sigue una estética **Dark Neon** (`#00ff88`) enfocada en la experien
 
 ### 🌐 Demo en Vivo
 Puedes ver el portafolio funcionando aquí:  
-👉 https://corecodev618.github.io/PORTAFOLIO-WEB/
+👉 https://corecodev618.github.io/personal-portafolio/
 
 ---
 
