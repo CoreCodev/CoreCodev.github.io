@@ -13,6 +13,8 @@
   --text-small: 0.9375rem;
   --text-lead: clamp(1.125rem, 2vw, 1.375rem);
   --measure: 62ch;
+  --radius: 0.625rem;
+  --radius-lg: 1rem;
 
   --page: min(100% - 2.5rem, 78rem);
   --space-section: clamp(5rem, 12vw, 9rem);
@@ -74,7 +76,7 @@ a {
 }
 
 .section {
-  padding-block-start: var(--space-section);
+  margin-block-start: var(--space-section);
 }
 
 .section-title {
@@ -93,6 +95,7 @@ a {
   min-height: 3rem;
   padding: 0.5rem 1.5rem;
   border: 1px solid var(--accent);
+  border-radius: var(--radius);
   background: none;
   color: inherit;
   font: inherit;
@@ -135,6 +138,7 @@ a {
   top: 0.5rem;
   left: 0.5rem;
   padding: 0.5rem 1rem;
+  border-radius: var(--radius);
   background: var(--accent);
   color: var(--bg);
   transform: translateY(-200%);

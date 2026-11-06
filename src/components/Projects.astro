@@ -1,37 +1,170 @@
 ---
 import ProjectCard from './ProjectCard.astro';
-import { featuredProject, projects } from '../data/projects';
+import { projects } from '../data/projects';
 ---
 
 <section id="proyectos" class="page section">
-  <h2 class="section-title">Proyectos</h2>
-  <ProjectCard project={featuredProject} featured />
-  <div class="projects-grid">
-    {projects.map((project) => <ProjectCard {project} />)}
+  <h2 class="section-title">Mis Proyectos</h2>
+  <div class="carousel" role="group" aria-label="Carrusel de proyectos">
+    <button class="btn arrow arrow-prev" type="button" aria-label="Ver proyectos anteriores">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+    </button>
+    <ul class="track">
+      {projects.map((project) => <li><ProjectCard {project} /></li>)}
+    </ul>
+    <button class="btn arrow arrow-next" type="button" aria-label="Ver proyectos siguientes">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+    </button>
+    <div class="progress" aria-hidden="true"><span></span></div>
   </div>
 </section>
 
+<script>
+  const track = document.querySelector<HTMLUListElement>('.track')!;
+  const prev = document.querySelector<HTMLButtonElement>('.arrow-prev')!;
+  const next = document.querySelector<HTMLButtonElement>('.arrow-next')!;
+  const progress = document.querySelector<HTMLDivElement>('.progress')!;
+
+  const move = (direction: number) => {
+    // El ajuste del carrusel completa el espacio entre tarjetas.
+    track.scrollBy({ left: direction * track.firstElementChild!.clientWidth });
+  };
+
+  const update = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    // aria-disabled en vez de disabled: la flecha conserva el foco del teclado al llegar al final.
+    prev.setAttribute('aria-disabled', String(track.scrollLeft <= 1));
+    next.setAttribute('aria-disabled', String(track.scrollLeft >= max - 1));
+    progress.style.setProperty('--visible', String(track.clientWidth / track.scrollWidth));
+    progress.style.setProperty('--position', String(max > 0 ? track.scrollLeft / max : 0));
+  };
+
+  prev.addEventListener('click', () => move(-1));
+  next.addEventListener('click', () => move(1));
+  track.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+</script>
+
 <style>
-  .projects-grid {
+  .carousel {
+    --gap: 1.25rem;
     display: grid;
-    gap: 3.5rem 2.5rem;
-    margin-block-start: 4rem;
+    grid-template:
+      'prev track next'
+      '. progress .' / auto minmax(0, 1fr) auto;
+    gap: 0.75rem 1rem;
+    align-items: center;
   }
 
-  @media (min-width: 40rem) {
-    .projects-grid {
-      grid-template-columns: repeat(6, 1fr);
-    }
+  .track {
+    grid-area: track;
+    display: flex;
+    gap: var(--gap);
+    /* El relleno deja aire para que la sombra no se corte; el margen negativo lo compensa. */
+    margin: -1rem -1rem -1.25rem;
+    padding: 1.5rem 1rem 2.25rem;
+    scroll-padding-inline: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
 
-    .projects-grid > :global(*) {
-      grid-column: span 3;
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track > li {
+    flex: 0 0 calc((100% - 2 * var(--gap)) / 3);
+    scroll-snap-align: start;
+  }
+
+  .arrow {
+    width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0;
+    border-radius: 50%;
+    color: var(--accent);
+  }
+
+  .arrow:hover:not([aria-disabled='true']) {
+    color: var(--bg);
+  }
+
+  .arrow-prev {
+    grid-area: prev;
+  }
+
+  .arrow-next {
+    grid-area: next;
+  }
+
+  .arrow[aria-disabled='true'],
+  .arrow[aria-disabled='true']:hover {
+    border-color: var(--line);
+    background: none;
+    color: var(--muted);
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .progress {
+    grid-area: progress;
+    height: 3px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--line);
+  }
+
+  .progress span {
+    display: block;
+    width: calc(var(--visible, 0.5) * 100%);
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transform: translateX(calc(var(--position, 0) * (100% / var(--visible, 0.5) - 100%)));
+  }
+
+  @media (max-width: 64rem) {
+    .track > li {
+      flex-basis: calc((100% - var(--gap)) / 2);
     }
   }
 
-  /* Las demos en vivo ocupan más espacio que los proyectos sin demo. */
-  @media (min-width: 56rem) {
-    .projects-grid > :global(.no-demo) {
-      grid-column: span 2;
+  /* En móvil se desliza con el dedo; las flechas pasan debajo y asoma la tarjeta siguiente. */
+  @media (max-width: 40rem) {
+    .carousel {
+      grid-template-areas:
+        'track track track'
+        'prev progress next';
+    }
+
+    .track > li {
+      flex-basis: 86%;
+    }
+  }
+
+  /* Sin JavaScript se usa la barra de desplazamiento del navegador. */
+  @media (scripting: none) {
+    .arrow,
+    .progress {
+      display: none;
+    }
+
+    .track {
+      grid-column: 1 / -1;
+      scrollbar-width: auto;
+    }
+
+    .track::-webkit-scrollbar {
+      display: revert;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .track {
+      scroll-behavior: smooth;
     }
   }
 </style>

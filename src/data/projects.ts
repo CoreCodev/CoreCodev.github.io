@@ -1,10 +1,10 @@
 import type { ImageMetadata } from 'astro';
-import nasa from '../assets/projects/nasa-air-quality.png';
-import kiosko from '../assets/projects/kiosko.png';
+import clima from '../assets/projects/la-chica-del-clima.jpg';
+import kiosko from '../assets/projects/kiosko.jpg';
 import filmteca from '../assets/projects/filmteca.png';
-import coretuneLogo from '../assets/projects/coretune-logo.svg';
-import limapayLogo from '../assets/projects/limapay-logo.png';
-import asistenciaQr from '../assets/projects/asistencia-qr.svg';
+import coretune from '../assets/projects/coretune.png';
+import limapay from '../assets/projects/limapay.png';
+import asistencia from '../assets/projects/asistencia.png';
 
 export interface Project {
   name: string;
@@ -13,26 +13,22 @@ export interface Project {
   code: string;
   demo?: string;
   note?: string;
-  /** Captura de la demo, o logo si se indica `logoWidth`. */
   image: ImageMetadata;
-  /** Muestra `image` centrada a este ancho, como portada de un proyecto sin demo pública. */
-  logoWidth?: number;
   alt: string;
 }
 
-export const featuredProject: Project = {
-  name: 'Air Quality Dashboard (NASA TEMPO)',
-  summary:
-    'Panel que muestra la calidad del aire, el clima y el riesgo de cada zona, con recomendaciones según a quién quieras proteger. Lo hice para el NASA Space Apps Challenge 2025.',
-  stack: ['HTML', 'CSS', 'JavaScript', 'Python', 'FastAPI'],
-  code: 'https://github.com/CoreCodev618/nasa-space-challenge',
-  demo: 'https://nasa-space-challenge.onrender.com',
-  note: 'La demo puede tardar un momento en abrir la primera vez.',
-  image: nasa,
-  alt: 'Panel de calidad del aire con niveles de NO2 y PM2.5, clima y grupos vulnerables',
-};
-
 export const projects: Project[] = [
+  {
+    name: 'La Chica del Clima',
+    summary:
+      'Dashboard de calidad del aire y riesgo por zona, con recomendaciones para cada persona. Hecho para el NASA Space Apps Challenge 2025.',
+    stack: ['HTML', 'CSS', 'JavaScript', 'Python', 'FastAPI'],
+    code: 'https://github.com/CoreCodev618/nasa-space-challenge',
+    demo: 'https://nasa-space-challenge.onrender.com',
+    note: 'La demo puede tardar un momento en abrir.',
+    image: clima,
+    alt: 'Portada de La Chica del Clima para el NASA Space Apps Challenge 2025',
+  },
   {
     name: 'Kiosko Autoservice',
     summary:
@@ -41,12 +37,11 @@ export const projects: Project[] = [
     code: 'https://github.com/CoreCodev618/kiosko-autoservice',
     demo: 'https://proyecto-auto-service.vercel.app/',
     image: kiosko,
-    alt: 'Carta del kiosko con hamburguesa, pizza y café, y el resumen del pedido con métodos de pago',
+    alt: 'Portada de Kiosko Autoservice con hamburguesa, pizza, café y resumen del pedido',
   },
   {
     name: 'Filmteca',
-    summary:
-      'Buscador de películas y series con tendencias, filtros, favoritos y tráileres, usando los datos de TMDB.',
+    summary: 'Buscador de películas y series con tendencias, filtros, favoritos y tráileres, usando los datos de TMDB.',
     stack: ['HTML', 'CSS', 'JavaScript', 'API de TMDB'],
     code: 'https://github.com/CoreCodev618/buscador-peliculas-series',
     demo: 'https://corecodev618.github.io/buscador-peliculas-series/',
@@ -55,32 +50,26 @@ export const projects: Project[] = [
   },
   {
     name: 'CoreTune',
-    summary:
-      'App de música con inicio personalizado, buscador, biblioteca y reproductor. La interfaz funciona con datos de prueba; la música real está en desarrollo.',
+    summary: 'App de música con inicio personalizado, buscador y reproductor. Por ahora funciona con datos de prueba.',
     stack: ['Flutter', 'Riverpod'],
     code: 'https://github.com/CoreCodev618/CoreMusic',
-    image: coretuneLogo,
-    logoWidth: 120,
-    alt: 'Logo de CoreTune',
+    image: coretune,
+    alt: 'Ilustración de CoreTune con un celular que muestra música recomendada',
   },
   {
     name: 'LimaPay',
-    summary:
-      'App para pagar el transporte con QR: el pasajero recarga saldo, escanea el código y revisa su historial de viajes.',
+    summary: 'App para pagar el transporte con QR: el pasajero recarga saldo, escanea y revisa su historial.',
     stack: ['Python', 'Flet', 'PostgreSQL'],
     code: 'https://github.com/CoreCodev618/LimaPay',
-    image: limapayLogo,
-    logoWidth: 95,
-    alt: 'Logo de LimaPay',
+    image: limapay,
+    alt: 'Ilustración de LimaPay con un celular que muestra el saldo y un código QR',
   },
   {
     name: 'Asistencia QR UNAC',
-    summary:
-      'Asistencia con un QR fijo por aula. Comprueba el horario, la matrícula y la ubicación del alumno, y muestra las asistencias en vivo.',
+    summary: 'Un QR fijo por aula que comprueba horario, matrícula y ubicación del alumno, con asistencias en vivo.',
     stack: ['Ember.js', 'Node.js', 'Express'],
     code: 'https://github.com/CoreCodev618/asistencia-qr-unac',
-    image: asistenciaQr,
-    logoWidth: 120,
-    alt: 'Código QR que abre el repositorio de Asistencia QR UNAC',
+    image: asistencia,
+    alt: 'Ilustración de Asistencia QR con el código de un aula y la lista de asistencias en vivo',
   },
 ];

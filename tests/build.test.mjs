@@ -52,6 +52,15 @@ test('el CV en PDF no contiene el número de celular', () => {
   assert.doesNotMatch(text, PHONE);
 });
 
+test('cada proyecto del carrusel tiene portada y código', () => {
+  const cards = [...html.matchAll(/<article.*?<\/article>/gs)].map((match) => match[0]);
+  assert.ok(cards.length >= 6);
+  for (const card of cards) {
+    assert.match(card, /<img\b/);
+    assert.match(card, /github\.com\/CoreCodev618\//);
+  }
+});
+
 test('no hay enlaces vacíos', () => {
   assert.doesNotMatch(html, /href=["']#?["']/);
 });
