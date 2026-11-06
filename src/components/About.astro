@@ -1,0 +1,46 @@
+---
+import { profile } from '../data/profile';
+---
+
+<section id="sobre-mi" class="page section">
+  <h2 class="section-title">Sobre mí</h2>
+  <div class="about">
+    <div class="bio">
+      <p>
+        Soy {profile.name}. Estudio Ingeniería de Sistemas en la {profile.university}, donde formo parte del tercio
+        superior. Lo que más me interesa es diseñar interfaces claras y modelar bases de datos.
+      </p>
+      <p>
+        Dedico mi tiempo a crear proyectos propios para aprender tecnologías nuevas. Busco oportunidades para aplicar lo
+        que sé en proyectos reales y seguir creciendo profesionalmente.
+      </p>
+      <p>Terminé el programa de inglés del Instituto Cultural Peruano Británico (Avanzado 6).</p>
+    </div>
+    <a class="btn" href={profile.cv} target="_blank" rel="noopener">Abrir mi CV en PDF</a>
+  </div>
+</section>
+
+<style>
+  .about {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .bio {
+    display: grid;
+    gap: 1.25rem;
+    max-width: var(--measure);
+    font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  }
+
+  .btn {
+    justify-self: start;
+  }
+
+  @media (min-width: 56rem) {
+    .about {
+      grid-template-columns: 1fr auto;
+    }
+  }
+</style>

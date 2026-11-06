@@ -1,0 +1,151 @@
+:root {
+  --bg: #0a0a0a;
+  --surface: #151515;
+  --line: #2a2a2a;
+  --text: #ffffff;
+  --muted: #a0a0a0;
+  --accent: #00ff88;
+  --accent-2: #00ccff;
+
+  --font-display: 'Anybody Variable', 'Arial Narrow', sans-serif;
+  --font-body: 'Familjen Grotesk Variable', 'Segoe UI', system-ui, sans-serif;
+
+  --text-small: 0.9375rem;
+  --text-lead: clamp(1.125rem, 2vw, 1.375rem);
+  --measure: 62ch;
+
+  --page: min(100% - 2.5rem, 78rem);
+  --space-section: clamp(5rem, 12vw, 9rem);
+  --nav-height: 4.25rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: calc(var(--nav-height) + 1rem);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.page {
+  width: var(--page);
+  margin-inline: auto;
+}
+
+.section {
+  padding-block-start: var(--space-section);
+}
+
+.section-title {
+  margin-block-end: clamp(2rem, 5vw, 3.5rem);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 4.75rem);
+  font-stretch: 75%;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid var(--accent);
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.btn-solid {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.btn-solid:hover {
+  background: var(--text);
+  border-color: var(--text);
+}
+
+.text-link {
+  display: inline-block;
+  padding-block: 0.5rem;
+  color: var(--accent);
+  font-weight: 600;
+  text-underline-offset: 0.25em;
+}
+
+.text-link:hover {
+  color: var(--text);
+}
+
+.skip-link {
+  position: absolute;
+  z-index: 20;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://corecodev618.github.io/sitemap-index.xml

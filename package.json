@@ -1,0 +1,22 @@
+{
+  "name": "portafolio-sebastian-rabanal",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "astro build && node --test tests/"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/anybody": "^5.3.0",
+    "@fontsource-variable/familjen-grotesk": "^5.3.0",
+    "astro": "^7.4.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "typescript": "^6.0.3"
+  }
+}

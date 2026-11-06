@@ -1,0 +1,41 @@
+---
+import { profile } from '../data/profile';
+---
+
+<section id="contacto" class="page section contact">
+  <h2 class="section-title">¿Trabajemos juntos?</h2>
+  <p class="contact-text">
+    Estoy disponible para proyectos freelance, colaboraciones o simplemente para conversar sobre tecnología.
+  </p>
+  <a class="text-link email" href={`mailto:${profile.email}`}>{profile.email}</a>
+  <ul class="contact-links">
+    <li><a class="text-link" href={profile.socials.linkedin} target="_blank" rel="noopener me">LinkedIn</a></li>
+    <li><a class="text-link" href={profile.socials.github} target="_blank" rel="noopener me">GitHub</a></li>
+  </ul>
+</section>
+
+<style>
+  .contact-text {
+    max-width: 44ch;
+    margin-block-end: 2rem;
+    font-size: var(--text-lead);
+  }
+
+  .email {
+    max-width: 100%;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 5.4vw, 3.5rem);
+    font-stretch: 75%;
+    font-weight: 700;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+    text-underline-offset: 0.15em;
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-block-start: 1.5rem;
+  }
+
+</style>

@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Projects from '../components/Projects.astro';
+import Experience from '../components/Experience.astro';
+import About from '../components/About.astro';
+import Skills from '../components/Skills.astro';
+import Certificates from '../components/Certificates.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import { profile } from '../data/profile';
+
+const title = `${profile.name} | Desarrollador de Software`;
+const description = `Portafolio de ${profile.name}, estudiante de Ingeniería de Sistemas en la ${profile.university} (Lima, Perú). Proyectos, experiencia, certificaciones y contacto.`;
+const home = new URL('/', Astro.site).href;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${home}#website`,
+      url: home,
+      name: profile.name,
+      alternateName: profile.alternateNames,
+      inLanguage: 'es',
+    },
+    {
+      '@type': 'ProfilePage',
+      '@id': `${home}#profile`,
+      url: home,
+      name: title,
+      dateModified: new Date().toISOString(),
+      isPartOf: { '@id': `${home}#website` },
+      mainEntity: {
+        '@type': 'Person',
+        '@id': `${home}#person`,
+        name: profile.name,
+        alternateName: profile.alternateNames,
+        description: profile.role,
+        url: home,
+        image: new URL(profile.shareImage, Astro.site).href,
+        email: `mailto:${profile.email}`,
+        affiliation: { '@type': 'CollegeOrUniversity', name: profile.university },
+        homeLocation: { '@type': 'City', name: profile.location },
+        sameAs: Object.values(profile.socials),
+      },
+    },
+  ],
+};
+---
+
+<Base {title} {description}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <Nav />
+  <main id="contenido">
+    <Hero />
+    <Projects />
+    <Experience />
+    <About />
+    <Skills />
+    <Certificates />
+    <Contact />
+  </main>
+  <Footer />
+</Base>

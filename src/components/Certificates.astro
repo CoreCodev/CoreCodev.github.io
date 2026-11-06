@@ -1,0 +1,146 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { certificates } from '../data/certificates';
+
+const items = await Promise.all(
+  certificates.map(async (certificate) => ({
+    ...certificate,
+    full: (await getImage({ src: certificate.image, width: 1600, format: 'webp', quality: 80 })).src,
+  })),
+);
+---
+
+<section id="certificaciones" class="page section">
+  <h2 class="section-title">Certificaciones</h2>
+  <ul class="certs">
+    {
+      items.map((item) => (
+        <li>
+          <a class="cert" href={item.full} data-caption={`${item.title}, ${item.issuer}`}>
+            <Image
+              src={item.image}
+              alt={`Certificado de ${item.title}`}
+              width={560}
+              widths={[320, 560]}
+              sizes="(min-width: 56rem) 30vw, 50vw"
+              format="webp"
+              quality={65}
+              loading="lazy"
+            />
+            <span class="cert-title">{item.title}</span>
+            <span class="cert-issuer">{item.issuer}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog class="viewer" aria-label="Certificado ampliado">
+    <button class="btn viewer-close" type="button">Cerrar</button>
+    <img class="viewer-image" alt="" />
+    <p class="viewer-caption"></p>
+  </dialog>
+</section>
+
+<script>
+  const viewer = document.querySelector<HTMLDialogElement>('.viewer')!;
+  const image = viewer.querySelector<HTMLImageElement>('.viewer-image')!;
+  const caption = viewer.querySelector<HTMLParagraphElement>('.viewer-caption')!;
+
+  document.querySelectorAll<HTMLAnchorElement>('.cert').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      image.src = link.href;
+      image.alt = `Certificado de ${link.dataset.caption}`;
+      caption.textContent = link.dataset.caption ?? '';
+      viewer.showModal();
+    });
+  });
+
+  viewer.querySelector('.viewer-close')!.addEventListener('click', () => viewer.close());
+  // Un clic en el fondo llega al propio <dialog>, no a su contenido.
+  viewer.addEventListener('click', (event) => {
+    if (event.target === viewer) viewer.close();
+  });
+  viewer.addEventListener('close', () => image.removeAttribute('src'));
+</script>
+
+<style>
+  .certs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1rem;
+  }
+
+  .cert {
+    display: block;
+    text-decoration: none;
+  }
+
+  .cert img {
+    width: 100%;
+    margin-block-end: 0.75rem;
+    border: 1px solid var(--line);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: border-color 0.15s;
+  }
+
+  .cert:hover img {
+    border-color: var(--accent);
+  }
+
+  .cert-title,
+  .cert-issuer {
+    display: block;
+  }
+
+  .cert-title {
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .cert-issuer {
+    color: var(--muted);
+    font-size: var(--text-small);
+  }
+
+  @media (min-width: 56rem) {
+    .certs {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem 1.75rem;
+    }
+  }
+
+  .viewer {
+    width: min(100% - 2rem, 70rem);
+    max-height: calc(100dvh - 2rem);
+    padding: 1rem;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .viewer::backdrop {
+    background: rgb(0 0 0 / 0.85);
+  }
+
+  .viewer-close {
+    display: flex;
+    min-height: 2.75rem;
+    margin-inline-start: auto;
+    margin-block-end: 0.75rem;
+    padding-inline: 1rem;
+  }
+
+  .viewer-image {
+    width: 100%;
+    max-height: calc(100dvh - 10rem);
+    object-fit: contain;
+  }
+
+  .viewer-caption {
+    margin-block-start: 0.75rem;
+    color: var(--muted);
+  }
+</style>

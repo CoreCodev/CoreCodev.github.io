@@ -1,0 +1,123 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+  featured?: boolean;
+}
+
+const { project, featured = false } = Astro.props;
+const sizes = featured
+  ? '(min-width: 78rem) 45rem, (min-width: 56rem) 58vw, 100vw'
+  : '(min-width: 78rem) 38rem, (min-width: 40rem) 50vw, 100vw';
+---
+
+<article class:list={['project', { featured, 'no-demo': !project.demo }]}>
+  {
+    project.logoWidth ? (
+      <div class="project-media project-cover">
+        <Image src={project.image} alt={project.alt} width={project.logoWidth} loading="lazy" />
+      </div>
+    ) : (
+      <Image
+        class="project-media"
+        src={project.image}
+        alt={project.alt}
+        width={1200}
+        widths={[480, 800, 1200]}
+        {sizes}
+        format="webp"
+        quality={72}
+        loading="lazy"
+      />
+    )
+  }
+  <div class="project-body">
+    <h3>{project.name}</h3>
+    <p>{project.summary}</p>
+    <ul class="stack" aria-label="Tecnologías">
+      {project.stack.map((tech) => <li>{tech}</li>)}
+    </ul>
+    {project.note && <p class="note">{project.note}</p>}
+    <div class="project-links">
+      {project.demo && <a class="text-link" href={project.demo} target="_blank" rel="noopener">Abrir demo</a>}
+      <a class="text-link" href={project.code} target="_blank" rel="noopener">Ver código</a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .project {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .project-media {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border: 1px solid var(--line);
+    object-fit: cover;
+    object-position: top;
+    transition: border-color 0.15s;
+  }
+
+  .project:hover .project-media {
+    border-color: var(--accent);
+  }
+
+  .project-cover {
+    display: grid;
+    place-items: center;
+    background: var(--surface);
+  }
+
+  h3 {
+    margin-block-end: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.625rem;
+    font-stretch: 80%;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .project-body > p {
+    max-width: var(--measure);
+    color: var(--muted);
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin-block-start: 0.75rem;
+    font-size: var(--text-small);
+  }
+
+  .project-body > .note {
+    margin-block-start: 0.75rem;
+    font-size: var(--text-small);
+  }
+
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-block-start: 1rem;
+  }
+
+  .featured h3 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.02;
+  }
+
+  @media (min-width: 56rem) {
+    .featured {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      align-items: center;
+      gap: 3rem;
+    }
+  }
+</style>

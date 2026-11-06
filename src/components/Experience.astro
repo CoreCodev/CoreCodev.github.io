@@ -1,0 +1,60 @@
+---
+import { experience } from '../data/experience';
+---
+
+<section id="experiencia" class="page section">
+  <h2 class="section-title">Experiencia</h2>
+  <ol class="timeline">
+    {
+      experience.map((item) => (
+        <li>
+          {item.period && <p class="period">{item.period}</p>}
+          <div class="entry">
+            <h3>{item.role}</h3>
+            <p class="place">{item.place}</p>
+            <p class="detail">{item.detail}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  li {
+    display: grid;
+    gap: 0.25rem 2rem;
+    padding-block: 1.75rem;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .period {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .place {
+    margin-block-end: 0.5rem;
+  }
+
+  .detail {
+    max-width: var(--measure);
+    color: var(--muted);
+  }
+
+  @media (min-width: 40rem) {
+    li {
+      grid-template-columns: 10rem 1fr;
+    }
+
+    .entry {
+      grid-column: 2;
+    }
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import { profile } from '../data/profile';
+---
+
+<Base title={`Página no encontrada | ${profile.name}`} description="Esta página no existe. Vuelve al portafolio." noindex>
+  <main id="contenido" class="page not-found">
+    <h1 class="section-title">Esta página no existe</h1>
+    <p>Puede que el enlace haya cambiado. Mis proyectos y mi CV están en la página principal.</p>
+    <a class="btn btn-solid" href="/">Ir a la página principal</a>
+  </main>
+</Base>
+
+<style>
+  .not-found {
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: 1.5rem;
+    min-height: 100svh;
+  }
+</style>

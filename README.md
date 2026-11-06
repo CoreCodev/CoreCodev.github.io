@@ -1,133 +1,46 @@
-<div align="center">
-  <h1 align="center">✨ Portafolio Web - Sebastian Rabanal</h1>
-  <h3>Ingeniero de Sistemas | Desarrollador de Software</h3>
+# Portafolio de Sebastian Rodrigo Rabanal Francia
 
-  <p>
-    <a href="https://github.com/SebastianRabanal">
-      <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Profile">
-    </a>
-    <a href="https://www.linkedin.com/in/sebastianrabanalfrancia/">
-      <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Profile">
-    </a>
-    <a href="mailto:sebastianrabanal34@gmail.com">
-      <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email">
-    </a>
-  </p>
+Estudiante de Ingeniería de Sistemas en la Universidad Nacional del Callao.
 
-  <p>
-    <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
-    <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
-    <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
-    <img src="https://img.shields.io/badge/Design-Responsive-green?style=for-the-badge">
-  </p>
-</div>
+**Sitio:** <https://corecodev618.github.io>
 
----
+![Portada del portafolio](public/og-sebastian-rodrigo-rabanal-francia.jpg)
 
-## 🚀 Sobre el Proyecto
+## Tecnologías
 
-Este repositorio contiene el código fuente de mi **Portafolio Profesional**. Es una aplicación web moderna diseñada para mostrar mis proyectos, habilidades técnicas y certificaciones académicas.
+[Astro](https://astro.build) genera páginas estáticas con muy poco JavaScript. Las imágenes se optimizan al compilar y las fuentes e iconos van dentro del proyecto.
 
-El diseño sigue una estética **Dark Neon** (`#00ff88`) enfocada en la experiencia de usuario (UX/UI), completamente responsiva para dispositivos móviles y escritorio.
+## Uso local
 
-### 🌐 Demo en Vivo
-Puedes ver el portafolio funcionando aquí:  
-👉 https://corecodev618.github.io/personal-portafolio/
-
----
-
-## ✨ Características Principales
-
-Este no es solo un sitio estático, incluye lógica avanzada en **JavaScript Vanilla**:
-
-* **📱 Diseño 100% Responsivo:** Adaptación fluida a móviles con menú tipo hamburguesa y ajustes de layout mediante *Media Queries*.
-* **🎡 Slider de Tecnologías Infinito (Draggable):** Un carrusel continuo que permite arrastrar (drag & drop) los iconos de las tecnologías, con efecto de bucle infinito matemático.
-* **🖼️ Galería de Proyectos:** Slider manual para navegar entre mis trabajos destacados.
-* **📜 Sistema de Modales:**
-    * **Visor de PDF:** Integración para visualizar mi CV directamente en la web sin descargar.
-    * **Lightbox de Certificados:** Galería interactiva para ver mis certificaciones (SQL, Power BI, Ethical Hacking, etc.) en alta resolución.
-* **⚡ Animaciones:** Uso de `IntersectionObserver` para animaciones de entrada al hacer scroll y efectos *hover* en CSS.
-
----
-
-## 🛠️ Tecnologías Utilizadas
-
-* **HTML5:** Estructura semántica.
-* **CSS3:** Variables CSS, Flexbox, Grid Layout, Backdrop-filter y animaciones.
-* **JavaScript (ES6+):** Lógica del DOM, eventos de arrastre (Touch/Mouse events) y observadores.
-* **FontAwesome:** Iconografía.
-
----
-
-## 📂 Estructura del Proyecto
+Requiere Node.js 22.23 o superior.
 
 ```bash
-├── 📁 css/
-│   └── style.css       # Estilos principales y diseño responsivo
-├── 📁 js/
-│   └── script.js       # Lógica de sliders, modales y menú
-├── 📁 images/capture-images-project/          # Recursos gráficos y capturas de proyectos
-├── 📁 docs/            # Archivos PDF (CV)
-├── 📁 certificados/    # Imágenes de certificaciones
-└── index.html          # Estructura principal
+npm install
+npm run dev      # sitio en http://localhost:4321
+npm run check    # revisa los tipos
+npm test         # compila y revisa el sitio generado (requiere pdftotext)
 ```
----
 
-## 📸 Capturas de Pantalla
+## Cómo actualizar el contenido
 
-<div align="center">
-  <img src="images/capture-images-project/1capture.png" alt="Vista Previa Incio" width="800">
-  <p><em>Vista previa de la pantalla de inicio</em></p>
-</div>
+Todo el contenido está en `src/data/`:
 
+| Archivo | Contenido |
+|---|---|
+| `profile.ts` | Nombre, correo, redes y ruta del CV |
+| `projects.ts` | Proyectos. Para agregar uno, añade su imagen a `src/assets/projects/` y una entrada aquí |
+| `experience.ts` | Experiencia |
+| `skills.ts` | Tecnologías |
+| `certificates.ts` | Certificaciones |
 
-<div align="center">
-  <img src="images/capture-images-project/2capture.png" alt="Vista Previa de Proyectos" width="800">
-  <p><em>Vista previa de la pantalla de Mis Proyectos</em></p>
-</div>
+Los colores y medidas están en `src/styles/global.css`. El CV que se publica es `public/Sebastian-Rodrigo-Rabanal-Francia-CV.pdf`.
 
+## Publicación
 
-<div align="center">
-  <img src="images/capture-images-project/3capture.png" alt="Vista Previa Sobre Mi" width="800">
-  <p><em>Vista previa de la pantalla de Sobre Mi</em></p>
-</div>
+Cada cambio en `main` se publica solo en GitHub Pages con `.github/workflows/deploy.yml`.
 
+## Contacto
 
-<div align="center">
-  <img src="images/capture-images-project/4capture.png" alt="Vista Previa Tecnologias" width="800">
-  <p><em>Vista previa de la pantalla de Tecnologias</em></p>
-</div>
-
-
-<div align="center">
-  <img src="images/capture-images-project/5capture.png" alt="Vista Previa Contact Me" width="800">
-  <p><em>Vista previa de la pantalla de Contact Me</em></p>
-</div>
-
-
----
-
-## 🔧 Instalación y Uso Local
-
-Si deseas clonar y probar este proyecto en tu máquina local:
-
-1. Clonar el repositorio:
-    git clone [https://github.com/SebastianRabanal/PORTAFOLIO-WEB.git](https://github.com/SebastianRabanal/PORTAFOLIO-WEB.git)
-
-2. Navegar en la carpeta:
-    cd PORTAFOLIO-WEB
-
-3. Ejecutar: Simplemente abre el archivo index.html en tu navegador web favorito o utiliza una extensión como "Live Server" en VS Code.
-
----
-## 📬 Contacto
-
-Si tienes alguna pregunta o quieres colaborar en un proyecto, no dudes en contactarme:
-
-Sebastian Rabanal
-
-📧 sebastianrabanal34@gmail.com
-
-🔗 LinkedIn
-
-<div align="center"> <p>Desarrollado con pasión y café ☕ por <a href="https://sebastianrabanal.github.io/PORTAFOLIO-WEB">Sebastian_Dev</a></p> <p>&copy; 2026</p> </div>
+- Correo: <sebastianrabanal34@gmail.com>
+- [LinkedIn](https://www.linkedin.com/in/sebastianrabanalfrancia/)
+- [GitHub](https://github.com/CoreCodev618)

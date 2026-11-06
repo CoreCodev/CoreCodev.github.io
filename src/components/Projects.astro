@@ -1,0 +1,37 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { featuredProject, projects } from '../data/projects';
+---
+
+<section id="proyectos" class="page section">
+  <h2 class="section-title">Proyectos</h2>
+  <ProjectCard project={featuredProject} featured />
+  <div class="projects-grid">
+    {projects.map((project) => <ProjectCard {project} />)}
+  </div>
+</section>
+
+<style>
+  .projects-grid {
+    display: grid;
+    gap: 3.5rem 2.5rem;
+    margin-block-start: 4rem;
+  }
+
+  @media (min-width: 40rem) {
+    .projects-grid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    .projects-grid > :global(*) {
+      grid-column: span 3;
+    }
+  }
+
+  /* Las demos en vivo ocupan más espacio que los proyectos sin demo. */
+  @media (min-width: 56rem) {
+    .projects-grid > :global(.no-demo) {
+      grid-column: span 2;
+    }
+  }
+</style>
