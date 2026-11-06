@@ -62,6 +62,13 @@ test('el CV en PDF no contiene el número de celular', () => {
   assert.doesNotMatch(text, PHONE);
 });
 
+test('el CV en PDF enlaza al usuario actual de GitHub', () => {
+  const text = execFileSync('pdftotext', [CV, '-'], { encoding: 'utf8' });
+  assert.match(text, /github\.com\/CoreCodev\b/);
+  assert.match(text, /corecodev\.github\.io/);
+  assert.doesNotMatch(text, /corecodev618/i);
+});
+
 test('cada proyecto del carrusel tiene portada y código', () => {
   const cards = [...html.matchAll(/<article.*?<\/article>/gs)].map((match) => match[0]);
   assert.ok(cards.length >= 6);
