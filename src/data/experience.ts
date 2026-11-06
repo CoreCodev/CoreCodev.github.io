@@ -1,8 +1,9 @@
 export const experience = [
   {
-    role: 'Me desarrollo en el área de IA',
+    role: 'Inteligencia Artificial aplicada',
     period: 'Actualmente',
-    detail: 'RAG, automatizaciones, Claude y DevOps.',
+    detail:
+      'Creo asistentes con RAG que responden a partir de documentos reales, automatizo flujos de trabajo con Claude y cuido que todo llegue a producción con prácticas de DevOps.',
   },
   {
     role: 'Desarrollador Front-end',
