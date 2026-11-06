@@ -8,7 +8,7 @@ export const profile = {
   cv: '/Sebastian-Rodrigo-Rabanal-Francia-CV.pdf',
   shareImage: '/og-sebastian-rodrigo-rabanal-francia.jpg',
   socials: {
-    github: 'https://github.com/CoreCodev618',
+    github: 'https://github.com/CoreCodev',
     linkedin: 'https://www.linkedin.com/in/sebastianrabanalfrancia/',
     instagram: 'https://www.instagram.com/sebastianrodrigorabanalfrancia/',
   },

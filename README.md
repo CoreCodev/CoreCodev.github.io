@@ -2,7 +2,7 @@
 
 Estudiante de Ingeniería de Sistemas en la Universidad Nacional del Callao.
 
-**Sitio:** <https://corecodev618.github.io>
+**Sitio:** <https://corecodev.github.io>
 
 ![Portada del portafolio](public/og-sebastian-rodrigo-rabanal-francia.jpg)
 
@@ -43,4 +43,4 @@ Cada cambio en `main` se publica solo en GitHub Pages con `.github/workflows/dep
 
 - Correo: <sebastianrabanal34@gmail.com>
 - [LinkedIn](https://www.linkedin.com/in/sebastianrabanalfrancia/)
-- [GitHub](https://github.com/CoreCodev618)
+- [GitHub](https://github.com/CoreCodev)

@@ -30,7 +30,7 @@ test('el nombre completo está en el título, la descripción y el H1', () => {
 
 test('hay un solo H1 y una dirección oficial', () => {
   assert.equal(html.match(/<h1/g).length, 1);
-  assert.match(html, /<link rel="canonical" href="https:\/\/corecodev618\.github\.io\/"/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/corecodev\.github\.io\/"/);
 });
 
 test('los datos estructurados son válidos y describen a la persona', () => {
@@ -41,6 +41,12 @@ test('los datos estructurados son válidos y describen a la persona', () => {
   assert.equal(page.mainEntity.name, FULL_NAME);
   assert.ok(page.mainEntity.sameAs.length >= 3);
   assert.equal(graph.find((node) => node['@type'] === 'WebSite').name, FULL_NAME);
+});
+
+test('el usuario antiguo de GitHub no aparece en el sitio', () => {
+  for (const file of textFiles('dist')) {
+    assert.doesNotMatch(readFileSync(file, 'utf8'), /corecodev618/i, file);
+  }
 });
 
 test('el número de celular no aparece en la página', () => {
@@ -61,7 +67,7 @@ test('cada proyecto del carrusel tiene portada y código', () => {
   assert.ok(cards.length >= 6);
   for (const card of cards) {
     assert.match(card, /<img\b/);
-    assert.match(card, /github\.com\/CoreCodev618\//);
+    assert.match(card, /github\.com\/CoreCodev\//);
   }
 });
 
@@ -155,7 +161,7 @@ test('el logo sigue leyéndose completo', () => {
 });
 
 test('existen robots.txt, mapa del sitio, imagen para compartir y CV', () => {
-  assert.match(readFileSync('dist/robots.txt', 'utf8'), /Sitemap: https:\/\/corecodev618\.github\.io\/sitemap-index\.xml/);
+  assert.match(readFileSync('dist/robots.txt', 'utf8'), /Sitemap: https:\/\/corecodev\.github\.io\/sitemap-index\.xml/);
   assert.ok(existsSync('dist/sitemap-index.xml'));
   assert.ok(existsSync('dist/og-sebastian-rodrigo-rabanal-francia.jpg'));
   assert.ok(existsSync(CV));
@@ -163,7 +169,7 @@ test('existen robots.txt, mapa del sitio, imagen para compartir y CV', () => {
 
 test('el mapa del sitio solo lista la página principal', () => {
   const sitemap = readFileSync('dist/sitemap-0.xml', 'utf8');
-  assert.deepEqual([...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]), ['https://corecodev618.github.io/']);
+  assert.deepEqual([...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]), ['https://corecodev.github.io/']);
 });
 
 test('la dirección antigua redirige a la nueva', () => {
