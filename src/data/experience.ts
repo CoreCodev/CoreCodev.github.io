@@ -1,9 +1,8 @@
 export const experience = [
   {
-    role: 'Técnico de Transmisión de Datos',
-    place: 'Oficina Nacional de Procesos Electorales (ONPE)',
-    period: 'Abril 2026',
-    detail: 'Transmisión de datos con dispositivos seguros y solución de incidencias de hardware en tiempo real.',
+    role: 'Me desarrollo en el área de IA',
+    period: 'Actualmente',
+    detail: 'RAG, automatizaciones, Claude y DevOps.',
   },
   {
     role: 'Desarrollador Front-end',

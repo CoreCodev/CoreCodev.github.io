@@ -11,7 +11,7 @@ import { experience } from '../data/experience';
           {item.period && <p class="period">{item.period}</p>}
           <div class="entry">
             <h3>{item.role}</h3>
-            <p class="place">{item.place}</p>
+            {item.place && <p class="place">{item.place}</p>}
             <p class="detail">{item.detail}</p>
           </div>
         </li>
@@ -40,10 +40,11 @@ import { experience } from '../data/experience';
   }
 
   .place {
-    margin-block-end: 0.5rem;
+    margin-block-start: 0.25rem;
   }
 
   .detail {
+    margin-block-start: 0.5rem;
     max-width: var(--measure);
     color: var(--muted);
   }
