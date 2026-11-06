@@ -46,9 +46,108 @@ const ogImage = new URL(profile.shareImage, Astro.site);
     <link rel="preload" href={anybodyFont} as="font" type="font/woff2" crossorigin />
 
     <slot name="head" />
+    <!-- Antes de pintar: si se añadiera después, lo que ya está en pantalla parpadearía. -->
+    <script is:inline>
+      if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        document.documentElement.classList.add('motion');
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <slot />
+    <script>
+      const splitLetters = (title: HTMLElement) => {
+        title.setAttribute('aria-label', title.textContent!.trim().replace(/\s+/g, ' '));
+
+        const walker = document.createTreeWalker(title, NodeFilter.SHOW_TEXT);
+        const texts: Text[] = [];
+        while (walker.nextNode()) texts.push(walker.currentNode as Text);
+
+        for (const text of texts) {
+          const pieces = [...text.textContent!].map((char) => {
+            if (/\s/.test(char)) return document.createTextNode(char);
+            const letter = document.createElement('span');
+            letter.className = 'letter';
+            letter.ariaHidden = 'true';
+            letter.textContent = char;
+            return letter;
+          });
+          text.replaceWith(...pieces);
+        }
+        return [...title.querySelectorAll<HTMLElement>('.letter')];
+      };
+
+      // Letras vivas: cada una se ensancha según lo cerca que esté el cursor.
+      const liveLetters = (title: HTMLElement) => {
+        let letters: HTMLElement[] = [];
+        let frame = 0;
+        let rest = 0;
+
+        // Se dividen al primer acercamiento, y la transición solo existe mientras se usa:
+        // si estuviera siempre, se reiniciaría en cada fotograma de las animaciones del título.
+        title.addEventListener('pointerenter', () => {
+          clearTimeout(rest);
+          if (!letters.length) letters = splitLetters(title);
+          title.classList.add('is-live');
+        });
+
+        title.addEventListener('pointermove', ({ clientX, clientY }) => {
+          cancelAnimationFrame(frame);
+          frame = requestAnimationFrame(() => {
+            const reach = parseFloat(getComputedStyle(title).fontSize) * 1.6;
+            const boxes = letters.map((letter) => letter.getBoundingClientRect());
+            letters.forEach((letter, index) => {
+              const { left, top, width, height } = boxes[index];
+              const near = Math.max(0, 1 - Math.hypot(clientX - left - width / 2, clientY - top - height / 2) / reach);
+              const base = parseFloat(getComputedStyle(letter.parentElement!).fontStretch);
+              letter.style.fontStretch = near ? `${base + near * 65}%` : '';
+            });
+          });
+        });
+
+        title.addEventListener('pointerleave', () => {
+          cancelAnimationFrame(frame);
+          letters.forEach((letter) => (letter.style.fontStretch = ''));
+          rest = window.setTimeout(() => title.classList.remove('is-live'), 250);
+        });
+      };
+
+      if (document.documentElement.classList.contains('motion')) {
+        const reveal = new IntersectionObserver(
+          (entries) => {
+            // Escalona solo lo que entra a la vez, sin importar cómo esté acomodado.
+            let order = 0;
+            for (const entry of entries) {
+              const element = entry.target as HTMLElement;
+              const seen = entry.isIntersecting;
+              element.style.setProperty('--i', String(seen ? Math.min(order++, 5) : 0));
+              element.classList.toggle('is-visible', seen);
+              // Lo que salió por arriba volverá a entrar desde arriba al subir.
+              element.toggleAttribute('data-above', entry.boundingClientRect.top < 0);
+            }
+          },
+          { threshold: 0.1 },
+        );
+        document.querySelectorAll('[data-reveal]').forEach((element) => reveal.observe(element));
+
+        if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+          // Posición del cursor dentro del elemento, de -0.5 a 0.5. El CSS decide qué hacer con ella.
+          document.querySelectorAll<HTMLElement>('[data-pointer]').forEach((element) => {
+            element.addEventListener('pointermove', (event) => {
+              const box = element.getBoundingClientRect();
+              element.style.setProperty('--mx', String((event.clientX - box.left) / box.width - 0.5));
+              element.style.setProperty('--my', String((event.clientY - box.top) / box.height - 0.5));
+            });
+            element.addEventListener('pointerleave', () => {
+              element.style.removeProperty('--mx');
+              element.style.removeProperty('--my');
+            });
+          });
+
+          document.querySelectorAll<HTMLElement>('[data-letters]').forEach(liveLetters);
+        }
+      }
+    </script>
   </body>
 </html>

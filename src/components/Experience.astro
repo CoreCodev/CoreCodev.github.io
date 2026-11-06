@@ -3,11 +3,11 @@ import { experience } from '../data/experience';
 ---
 
 <section id="experiencia" class="page section">
-  <h2 class="section-title">Experiencia</h2>
+  <h2 class="section-title" data-reveal data-letters>Experiencia</h2>
   <ol class="timeline">
     {
       experience.map((item) => (
-        <li>
+        <li data-reveal>
           {item.period && <p class="period">{item.period}</p>}
           <div class="entry">
             <h3>{item.role}</h3>
@@ -22,10 +22,28 @@ import { experience } from '../data/experience';
 
 <style>
   li {
+    position: relative;
     display: grid;
     gap: 0.25rem 2rem;
     padding-block: 1.75rem;
+  }
+
+  /* La línea de cada etapa se dibuja de izquierda a derecha. */
+  li::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
     border-block-start: 1px solid var(--line);
+    transform-origin: left;
+    transition: border-color 0.3s, scale 1.1s var(--ease) var(--delay, 0s);
+  }
+
+  li:hover::before {
+    border-color: var(--accent);
+  }
+
+  .entry {
+    transition: translate 0.35s var(--ease);
   }
 
   .period {
@@ -56,6 +74,18 @@ import { experience } from '../data/experience';
 
     .entry {
       grid-column: 2;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    li:hover .entry {
+      translate: 0.5rem 0;
+    }
+  }
+
+  @media screen and (prefers-reduced-motion: no-preference) {
+    :global(.motion) li:not(.is-visible)::before {
+      scale: 0 1;
     }
   }
 </style>

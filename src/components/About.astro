@@ -1,26 +1,36 @@
 ---
 import { profile } from '../data/profile';
+
+const texts = [
+  `Soy ${profile.name}. Estudio Ingeniería de Sistemas en la ${profile.university}, donde formo parte del tercio superior, y hoy dedico mi energía a la inteligencia artificial aplicada.`,
+  'Me gusta llevar la IA más allá de la demo: conectarla con información real, hacer que resuelva tareas de principio a fin y dejarla funcionando sin que nadie tenga que estar pendiente.',
+  'Aprendo construyendo. Mis proyectos van desde un panel de calidad del aire para un reto de la NASA hasta una app de pagos con QR. Si tienes un proceso que te quita tiempo o una idea que quieres ver funcionando, conversemos.',
+  'Además, terminé el programa de inglés del Instituto Cultural Peruano Británico (Avanzado 6).',
+];
+
+// Posición de cada palabra en todo el texto, de 0 a 1: indica cuándo se enciende al desplazarse.
+const total = texts.join(' ').split(' ').length;
+let seen = 0;
+const paragraphs = texts.map((text) => text.split(' ').map((word) => ({ word, position: (seen++ / total).toFixed(3) })));
 ---
 
 <section id="sobre-mi" class="page section">
-  <h2 class="section-title">Sobre mí</h2>
+  <h2 class="section-title" data-reveal data-letters>Sobre mí</h2>
   <div class="about">
     <div class="bio">
-      <p>
-        Soy {profile.name}. Estudio Ingeniería de Sistemas en la {profile.university}, donde formo parte del tercio
-        superior, y hoy dedico mi energía a la inteligencia artificial aplicada.
-      </p>
-      <p>
-        Me gusta llevar la IA más allá de la demo: conectarla con información real, hacer que resuelva tareas de principio
-        a fin y dejarla funcionando sin que nadie tenga que estar pendiente.
-      </p>
-      <p>
-        Aprendo construyendo. Mis proyectos van desde un panel de calidad del aire para un reto de la NASA hasta una app
-        de pagos con QR. Si tienes un proceso que te quita tiempo o una idea que quieres ver funcionando, conversemos.
-      </p>
-      <p>Además, terminé el programa de inglés del Instituto Cultural Peruano Británico (Avanzado 6).</p>
+      {
+        paragraphs.map((words) => (
+          <p data-reveal>
+            {words.map(({ word, position }) => (
+              <span class="word" style={`--p: ${position}`}>{word} </span>
+            ))}
+          </p>
+        ))
+      }
     </div>
-    <a class="btn" href={profile.cv} target="_blank" rel="noopener">Abrir mi CV en PDF</a>
+    <div class="cv" data-reveal>
+      <a class="btn" href={profile.cv} target="_blank" rel="noopener">Abrir mi CV en PDF</a>
+    </div>
   </div>
 </section>
 
@@ -38,13 +48,44 @@ import { profile } from '../data/profile';
     font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
   }
 
-  .btn {
+  /* La primera idea se lee como una declaración, no como un párrafo más. */
+  .bio p:first-child {
+    margin-block-end: 0.5rem;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .cv {
     justify-self: start;
   }
 
   @media (min-width: 56rem) {
     .about {
       grid-template-columns: 1fr auto;
+    }
+  }
+
+  /* El texto se enciende palabra por palabra al bajar y se apaga al subir. */
+  @media screen and (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .bio {
+        view-timeline-name: --bio;
+      }
+
+      .word {
+        animation-name: word-on;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --bio;
+        animation-range: cover calc(10% + var(--p) * 28%) cover calc(15% + var(--p) * 28%);
+      }
+    }
+  }
+
+  @keyframes word-on {
+    from {
+      opacity: 0.25;
     }
   }
 </style>

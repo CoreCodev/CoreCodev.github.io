@@ -10,7 +10,7 @@ interface Props {
 const { project } = Astro.props;
 ---
 
-<article class="card">
+<article class="card" data-glow>
   <Image
     class="cover"
     src={project.image}
@@ -50,6 +50,9 @@ const { project } = Astro.props;
 
 <style>
   .card {
+    --glow-size: 14rem;
+    --glow-strength: 14%;
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -57,13 +60,18 @@ const { project } = Astro.props;
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     background: var(--surface);
-    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    transition: border-color 0.2s, box-shadow 0.3s, transform 0.3s var(--ease);
   }
 
-  .card:hover,
+  /* El cursor se detecta en el <li>, que no se mueve: en la tarjeta parpadearía en su borde. */
+  :global(li:hover) > .card,
   .card:focus-within {
     border-color: color-mix(in srgb, var(--accent) 60%, transparent);
-    box-shadow: 0 12px 32px color-mix(in srgb, var(--accent) 14%, transparent);
+    box-shadow: var(--shadow-glow);
+  }
+
+  :global(li:hover) > .card::after {
+    opacity: 1;
   }
 
   .cover {
@@ -71,6 +79,7 @@ const { project } = Astro.props;
     aspect-ratio: 16 / 9;
     object-fit: cover;
     object-position: top;
+    transition: scale 0.6s var(--ease);
   }
 
   .body {
@@ -137,10 +146,15 @@ const { project } = Astro.props;
     border-color: var(--line);
   }
 
+  /* La tarjeta sube y se inclina hacia el cursor. */
   @media (prefers-reduced-motion: no-preference) {
-    .card:hover,
+    :global(li:hover) > .card,
     .card:focus-within {
-      transform: translateY(-4px);
+      transform: perspective(60rem) translateY(-6px) rotateX(calc(var(--my, 0) * -5deg)) rotateY(calc(var(--mx, 0) * 5deg));
+    }
+
+    :global(li:hover) > .card .cover {
+      scale: 1.05;
     }
   }
 </style>

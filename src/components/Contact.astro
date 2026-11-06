@@ -1,30 +1,120 @@
 ---
 import { profile } from '../data/profile';
+
+const questions = [
+  {
+    question: '¿En qué me puedes ayudar?',
+    answer:
+      'Construyo asistentes que responden con tus propios datos y automatizaciones que se encargan del trabajo repetitivo. También hago aplicaciones completas, como un kiosko de autoservicio para restaurantes o una app de pagos con QR.',
+  },
+  {
+    question: '¿Estás disponible?',
+    answer: 'Sí. Estoy disponible para proyectos freelance, colaboraciones o simplemente para conversar sobre tecnología.',
+  },
+  {
+    question: '¿Qué proyecto debería ver primero?',
+    answer:
+      'La Chica del Clima: un panel de calidad del aire y riesgo por zona, con recomendaciones para cada persona. Lo hice para el NASA Space Apps Challenge 2025.',
+  },
+  {
+    question: '¿Cómo te escribo?',
+    answer: `Por correo a ${profile.email}, o por LinkedIn si lo prefieres. Cuéntame qué quieres resolver.`,
+  },
+].map(({ question, answer }) => ({ question, words: answer.split(' ') }));
 ---
 
-<section id="contacto" class="page section contact">
-  <h2 class="section-title">¿Trabajemos juntos?</h2>
-  <p class="contact-text">
-    Estoy disponible para proyectos freelance, colaboraciones o simplemente para conversar sobre tecnología.
-  </p>
-  <a class="text-link email" href={`mailto:${profile.email}`}>{profile.email}</a>
-  <ul class="contact-links">
-    <li><a class="text-link" href={profile.socials.linkedin} target="_blank" rel="noopener me">LinkedIn</a></li>
-    <li><a class="text-link" href={profile.socials.github} target="_blank" rel="noopener me">GitHub</a></li>
-  </ul>
+<section id="contacto" class="section contact" data-pointer data-glow>
+  <div class="page">
+    <h2 class="section-title contact-title" data-reveal data-letters>¿Trabajemos juntos?</h2>
+    <div class="contact-grid">
+      <div class="reach" data-reveal>
+        <p class="contact-text">Si tienes un proceso que te quita tiempo o una idea que quieres ver funcionando, escríbeme.</p>
+        <a class="text-link email" href={`mailto:${profile.email}`}>{profile.email}</a>
+        <div class="contact-actions">
+          <button class="btn btn-solid copy" type="button" data-email={profile.email} aria-live="polite">Copiar correo</button>
+          <a class="btn" href={profile.socials.linkedin} target="_blank" rel="noopener me">LinkedIn</a>
+          <a class="btn" href={profile.socials.github} target="_blank" rel="noopener me">GitHub</a>
+        </div>
+      </div>
+      <div class="console" data-reveal>
+        <div class="console-head">
+          <h3>Pregúntame algo</h3>
+          <p>Estas respuestas las escribí yo; aquí no contesta una IA.</p>
+        </div>
+        {
+          questions.map(({ question, words }, index) => (
+            <details name="preguntas" open={index === 0}>
+              <summary>{question}</summary>
+              <p class="answer" style={`--total: ${words.length}`}>
+                {words.map((word, order) => (
+                  <span class="word" style={`--n: ${order}`}>{word} </span>
+                ))}
+                <span class="typing" aria-hidden="true"></span>
+              </p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+  <div class="led" aria-hidden="true"></div>
 </section>
 
+<script>
+  const copy = document.querySelector<HTMLButtonElement>('.copy')!;
+  const label = copy.textContent;
+  let timer = 0;
+
+  copy.addEventListener('click', async () => {
+    clearTimeout(timer);
+    try {
+      await navigator.clipboard.writeText(copy.dataset.email!);
+      copy.textContent = 'Correo copiado';
+    } catch {
+      copy.textContent = 'No se pudo copiar';
+    }
+    timer = window.setTimeout(() => (copy.textContent = label), 2500);
+  });
+</script>
+
 <style>
+  /* Escena de cierre: la habitación de noche, iluminada desde abajo por una tira de luz. */
+  .contact {
+    --glow-size: 30rem;
+    --glow-strength: 12%;
+    position: relative;
+    overflow: clip;
+    padding-block: clamp(3rem, 7vw, 6rem) clamp(4rem, 9vw, 7rem);
+    background: radial-gradient(70% 60% at 50% 100%, color-mix(in srgb, var(--accent) 13%, transparent), transparent);
+  }
+
+  .contact-title {
+    font-size: clamp(3.25rem, 15vw, 6rem);
+  }
+
+  .contact > .page {
+    /* El cursor solo le importa al brillo: aquí se corta para no recalcular el contenido. */
+    --mx: 0;
+    --my: 0;
+  }
+
+  .contact-grid {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
   .contact-text {
-    max-width: 44ch;
-    margin-block-end: 2rem;
+    max-width: 34ch;
+    margin-block-end: 1.5rem;
     font-size: var(--text-lead);
+    line-height: 1.45;
   }
 
   .email {
     max-width: 100%;
     font-family: var(--font-display);
-    font-size: clamp(1.25rem, 5.4vw, 3.5rem);
+    font-size: clamp(1.25rem, 5.4vw, 2.6rem);
     font-stretch: 75%;
     font-weight: 700;
     line-height: 1.1;
@@ -32,10 +122,168 @@ import { profile } from '../data/profile';
     text-underline-offset: 0.15em;
   }
 
-  .contact-links {
+  .contact-actions {
     display: flex;
-    gap: 1.5rem;
-    margin-block-start: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 1.75rem;
   }
 
+  .console {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .console-head {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .console-head h3 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-stretch: 75%;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .console-head p {
+    color: var(--muted);
+    font-size: var(--text-small);
+  }
+
+  details {
+    border-block-start: 1px solid var(--line);
+  }
+
+  summary {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    min-height: 3.25rem;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    list-style: none;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::before {
+    content: '';
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    border: solid var(--accent);
+    border-width: 0 2px 2px 0;
+    rotate: -45deg;
+    transition: rotate 0.25s var(--ease);
+  }
+
+  summary:hover,
+  details[open] summary {
+    color: var(--accent);
+  }
+
+  details[open] summary::before {
+    rotate: 45deg;
+  }
+
+  .answer {
+    padding: 0 1.5rem 1.5rem 3rem;
+    line-height: 1.55;
+  }
+
+  .typing {
+    display: inline-block;
+    width: 0.55em;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  /* La tira de luz: se enciende desde el centro y su color corre mientras se ve. */
+  .led {
+    position: absolute;
+    inset: auto 0 0;
+    height: 3px;
+    overflow: hidden;
+    box-shadow: 0 0 2.5rem 0.25rem color-mix(in srgb, var(--accent) 45%, transparent);
+    transition: scale 1.4s var(--ease);
+  }
+
+  .led::before {
+    content: '';
+    display: block;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent), var(--accent-2), var(--accent));
+  }
+
+  @media (min-width: 48rem) {
+    .contact-title {
+      /* Deja sitio para que las letras vivas se ensanchen sin salirse de la pantalla. */
+      font-size: clamp(3.25rem, 8vw, 7.25rem);
+      white-space: nowrap;
+    }
+  }
+
+  @media (min-width: 56rem) {
+    .contact-grid {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    }
+
+    .email {
+      font-size: clamp(1.5rem, 3.1vw, 2.6rem);
+    }
+  }
+
+  @media (scripting: none) {
+    .copy {
+      display: none;
+    }
+  }
+
+  @media screen and (prefers-reduced-motion: no-preference) {
+    /* Las palabras llegan una a una; al volver a la sección, la respuesta se escribe de nuevo. */
+    .console {
+      --word-step: 35ms;
+    }
+
+    .console.is-visible details[open] .word {
+      animation: word-in 0.4s var(--ease) calc(var(--n) * var(--word-step)) backwards;
+    }
+
+    .console.is-visible details[open] .typing {
+      --end: calc(var(--total) * var(--word-step));
+      animation:
+        word-in 0.2s linear var(--end) backwards,
+        blink 1s steps(2, jump-none) var(--end) 6;
+    }
+
+    /* La tira sigue a la consola, lo último que queda encima de ella en cualquier pantalla. */
+    :global(.motion) .contact:not(:has(.console.is-visible)) .led {
+      scale: 0 1;
+    }
+
+    .contact:has(.console.is-visible) .led::before {
+      animation: run 6s linear infinite;
+    }
+  }
+
+  @keyframes word-in {
+    from {
+      opacity: 0;
+      filter: blur(4px);
+    }
+  }
+
+  @keyframes run {
+    to {
+      translate: -50% 0;
+    }
+  }
 </style>

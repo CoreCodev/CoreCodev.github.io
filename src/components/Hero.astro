@@ -13,7 +13,7 @@ const socials = [
 ];
 ---
 
-<section id="inicio" class="hero">
+<section id="inicio" class="hero" data-pointer data-glow>
   <Image
     class="hero-photo"
     src={photo}
@@ -26,7 +26,7 @@ const socials = [
     priority
   />
   <div class="page hero-content">
-    <h1 class="hero-name">
+    <h1 class="hero-name" data-letters>
       {profile.name.split(' ').map((word, index) => <span style={`--i: ${index}`}>{word} </span>)}
     </h1>
     <p class="hero-role">{profile.role}. Construyo soluciones con inteligencia artificial: asistentes que responden con tus propios datos y automatizaciones que se encargan del trabajo repetitivo.</p>
@@ -56,6 +56,8 @@ const socials = [
     min-height: calc(100svh - var(--nav-height));
     overflow: hidden;
     padding-block: 2.5rem;
+    --glow-size: 26rem;
+    --glow-strength: 18%;
   }
 
   .hero-photo {
@@ -71,13 +73,16 @@ const socials = [
   }
 
   .hero-content {
+    /* El cursor solo le importa a la foto y al brillo: aquí se corta para no recalcular el texto. */
+    --mx: 0;
+    --my: 0;
     position: relative;
   }
 
   .hero-name {
     margin-block-end: 1.75rem;
     width: fit-content;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent)) 0 0 / 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -118,7 +123,7 @@ const socials = [
     width: 3rem;
     height: 3rem;
     color: var(--muted);
-    transition: color 0.15s;
+    transition: color 0.2s, translate 0.3s var(--spring);
   }
 
   .socials a:hover {
@@ -154,16 +159,111 @@ const socials = [
     }
   }
 
-  /* El nombre se estira hasta su ancho final una sola vez, al cargar. */
-  @media (prefers-reduced-motion: no-preference) {
+  /* Al cargar: la habitación se enciende, el nombre se estira y luego entra el resto. */
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .hero-photo {
+      /* La escala evita que asomen los bordes de la foto al moverla. */
+      scale: 1.06;
+      translate: calc(var(--mx, 0) * -28px) calc(var(--my, 0) * -18px);
+      transition: translate 0.5s var(--ease);
+      animation: lights-on 1.6s var(--ease) backwards;
+    }
+
     .hero-name span {
-      animation: stretch 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i) * 60ms) backwards;
+      animation: stretch 1s var(--ease) calc(var(--i) * 80ms) backwards;
+    }
+
+    /* La foto baja más despacio que la página. Por separado: ver la nota de la barra en Nav. */
+    @supports (animation-timeline: scroll()) {
+      .hero-photo {
+        animation-name: lights-on, drift;
+        animation-duration: 1.6s, auto;
+        animation-timing-function: var(--ease), linear;
+        animation-fill-mode: backwards, both;
+        animation-timeline: auto, scroll(root);
+        animation-range: normal, 0 100vh;
+      }
+
+      /* El nombre se comprime al bajar y se vuelve a estirar al subir. */
+      .hero-name span {
+        animation-name: stretch, squeeze;
+        animation-duration: 1s, auto;
+        animation-timing-function: var(--ease), linear;
+        animation-delay: calc(var(--i) * 80ms), 0s;
+        animation-fill-mode: backwards, both;
+        animation-timeline: auto, scroll(root);
+        animation-range: normal, 0 90vh;
+      }
+
+      /* El bloque se apaga según su salida real de la pantalla, sea cual sea su altura. */
+      .hero-content {
+        animation-name: leave;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: exit;
+      }
+    }
+
+    .hero-name {
+      animation:
+        rise 0.6s var(--ease) backwards,
+        flow 4s ease-in-out 1s 2 alternate;
+    }
+
+    .hero-role {
+      animation: rise 0.7s var(--ease) 0.45s backwards;
+    }
+
+    .hero-actions {
+      animation: rise 0.7s var(--ease) 0.6s backwards;
+    }
+
+    /* Sobre el <li>, que no se mueve: si el icono detectara el cursor, parpadearía en su borde. */
+    .socials li:hover a {
+      translate: 0 -4px;
+    }
+  }
+
+  @keyframes leave {
+    50% {
+      opacity: 1;
+    }
+    to {
+      opacity: 0.15;
+      translate: 0 -4rem;
+    }
+  }
+
+  @keyframes squeeze {
+    to {
+      font-stretch: 52%;
+    }
+  }
+
+  @keyframes drift {
+    to {
+      transform: translateY(18vh);
+    }
+  }
+
+  @keyframes lights-on {
+    from {
+      opacity: 0;
+      scale: 1.16;
+      filter: brightness(0.3) saturate(0.5);
     }
   }
 
   @keyframes stretch {
     from {
       font-stretch: 50%;
+    }
+  }
+
+  @keyframes flow {
+    to {
+      background-position: 100% 0;
     }
   }
 </style>

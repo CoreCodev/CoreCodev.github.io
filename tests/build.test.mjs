@@ -10,6 +10,10 @@ const FULL_NAME = 'Sebastian Rodrigo Rabanal Francia';
 const PHONE = /(?<![\w.-])(?:\+?51[\s.-]*)?9\d{2}[\s.-]*\d{3}[\s.-]*\d{3}(?![\w.-])/;
 const CV = 'dist/Sebastian-Rodrigo-Rabanal-Francia-CV.pdf';
 const html = readFileSync('dist/index.html', 'utf8');
+const css = readdirSync('dist/_astro')
+  .filter((file) => file.endsWith('.css'))
+  .map((file) => readFileSync(join('dist/_astro', file), 'utf8'))
+  .join('');
 
 const textFiles = (dir) =>
   readdirSync(dir, { withFileTypes: true, recursive: true })
@@ -82,11 +86,72 @@ test('no quedan fechas vacías en la experiencia', () => {
 });
 
 test('el degradado del nombre funciona en navegadores antiguos', () => {
-  const css = readdirSync('dist/_astro')
-    .filter((file) => file.endsWith('.css'))
-    .map((file) => readFileSync(join('dist/_astro', file), 'utf8'))
-    .join('');
   assert.match(css, /-webkit-background-clip:text/);
+});
+
+test('la barra de progreso conserva su animación tras comprimir el CSS', () => {
+  assert.match(css, /animation-timeline:scroll\(root\)/);
+  // Chrome descarta la regla si la línea de tiempo queda dentro de la forma corta "animation:".
+  assert.doesNotMatch(css, /animation:[^;}]*scroll\(/);
+});
+
+test('las animaciones no esconden contenido sin JavaScript ni con movimiento reducido', () => {
+  assert.match(html, /data-reveal/);
+  // Lo que parte oculto debe depender de .motion, que solo pone el script si se permite movimiento.
+  const hidden = [...css.matchAll(/([^{}]*\[data-reveal\]:not\(\.is-visible\))\{[^}]*opacity:0/g)].map((match) => match[1]);
+  assert.ok(hidden.length > 0, 'no se encontró la regla de aparición');
+  for (const selector of hidden) assert.match(selector, /\.motion /, selector);
+  assert.doesNotMatch(html, /class="[^"]*\bmotion\b/);
+});
+
+test('con movimiento reducido las transiciones son inmediatas', () => {
+  assert.match(css, /prefers-reduced-motion:reduce\)\{[^{}]*\{transition-duration:\.01ms!important/);
+});
+
+test('el brillo del nombre no se anima para siempre', () => {
+  assert.match(css, /\bflow\b/);
+  assert.doesNotMatch(css, /\bflow\b[^,;}]*infinite|infinite[^,;}]*\bflow\b/);
+});
+
+test('las tarjetas detectan el cursor en su <li>, que no se mueve', () => {
+  assert.doesNotMatch(css, /\.card[^{},]*:hover/);
+  assert.match(html, /<li[^>]*data-pointer[^>]*>\s*<article/);
+});
+
+test('.motion se activa antes de pintar y solo si se permite movimiento', () => {
+  const head = html.slice(0, html.indexOf('</head>'));
+  assert.match(head, /prefers-reduced-motion: no-preference[^<]*classList\.add\('motion'\)/);
+});
+
+test('el brillo se enciende desde una sola regla compartida', () => {
+  assert.match(css, /\[data-glow\]:hover:after\{opacity:1\}/);
+});
+
+test('las apariciones se repiten al subir y al bajar', () => {
+  assert.doesNotMatch(html, /unobserve/);
+  assert.match(css, /\[data-above\]:not\(\.is-visible\)/);
+});
+
+test('la consola de contacto funciona sin JavaScript y aclara quién responde', () => {
+  const contact = html.slice(html.indexOf('id="contacto"'));
+  const details = [...contact.matchAll(/<details\b[^>]*>/g)].map((match) => match[0]);
+  assert.ok(details.length >= 3);
+  assert.ok(details.every((tag) => tag.includes('name="preguntas"')));
+  assert.equal(details.filter((tag) => /\bopen\b/.test(tag)).length, 1);
+  assert.match(contact, /aquí no contesta una IA/);
+});
+
+test('el texto dividido en palabras se sigue leyendo completo', () => {
+  const plain = (fragment) => fragment.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
+  const about = html.slice(html.indexOf('id="sobre-mi"'), html.indexOf('id="tecnologias"'));
+  assert.match(plain(about), /Aprendo construyendo\. Mis proyectos van desde un panel/);
+  const contact = html.slice(html.indexOf('id="contacto"'));
+  assert.match(plain(contact), /Sí\. Estoy disponible para proyectos freelance/);
+});
+
+test('el logo sigue leyéndose completo', () => {
+  const logo = html.match(/<a[^>]*class="logo"[^>]*>(.*?)<\/a>/s)[1].replace(/<[^>]+>/g, '');
+  assert.equal(logo, '&lt;Core_Codev&gt;');
 });
 
 test('existen robots.txt, mapa del sitio, imagen para compartir y CV', () => {

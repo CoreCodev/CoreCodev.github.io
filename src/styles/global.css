@@ -19,6 +19,12 @@
   --page: min(100% - 2.5rem, 78rem);
   --space-section: clamp(5rem, 12vw, 9rem);
   --nav-height: 4.25rem;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --gradient-accent: linear-gradient(90deg, var(--accent), var(--accent-2));
+  --shadow-glow: 0 12px 32px color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 * {
@@ -96,27 +102,29 @@ a {
   padding: 0.5rem 1.5rem;
   border: 1px solid var(--accent);
   border-radius: var(--radius);
-  background: none;
+  /* El color de relleno entra desde la izquierda al pasar el cursor. */
+  --fill: var(--accent);
+  background: linear-gradient(var(--fill), var(--fill)) no-repeat 0 0 / 0 100%;
   color: inherit;
   font: inherit;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  transition: background-size 0.3s var(--ease), border-color 0.2s, color 0.2s, scale 0.15s;
 }
 
 .btn:hover {
-  background: var(--accent);
+  background-size: 100% 100%;
   color: var(--bg);
 }
 
 .btn-solid {
-  background: var(--accent);
+  --fill: var(--text);
+  background-color: var(--accent);
   color: var(--bg);
 }
 
 .btn-solid:hover {
-  background: var(--text);
   border-color: var(--text);
 }
 
@@ -126,10 +134,12 @@ a {
   color: var(--accent);
   font-weight: 600;
   text-underline-offset: 0.25em;
+  transition: color 0.2s, text-underline-offset 0.2s var(--ease);
 }
 
 .text-link:hover {
   color: var(--text);
+  text-underline-offset: 0.4em;
 }
 
 .skip-link {
@@ -151,5 +161,90 @@ a {
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+
+  .btn:active {
+    scale: 0.97;
+  }
+
+  .is-live .letter {
+    transition: font-stretch 0.25s var(--ease);
+  }
+}
+
+/* Aparición al desplazarse, al bajar y al subir. Solo oculta si el script ya cargó (.motion) y nunca al imprimir. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    --delay: calc(var(--i, 0) * 70ms);
+    transition:
+      opacity 0.7s var(--ease) var(--delay),
+      translate 0.7s var(--ease) var(--delay);
+  }
+
+  .motion [data-reveal]:not(.is-visible) {
+    opacity: 0;
+    translate: 0 1.75rem;
+  }
+
+  .motion [data-reveal][data-above]:not(.is-visible) {
+    translate: 0 -1.75rem;
+  }
+
+  /* Los títulos repiten el gesto del nombre: se estiran hasta su ancho final.
+     En móvil no, porque al estirarse pueden saltar de línea y empujar lo que se está leyendo. */
+  @media (min-width: 48rem) {
+    .section-title[data-reveal] {
+      transition:
+        opacity 0.4s linear,
+        font-stretch 1s var(--ease);
+    }
+
+    .motion .section-title[data-reveal]:not(.is-visible) {
+      translate: none;
+      font-stretch: 50%;
+    }
+  }
+}
+
+/* Un brillo de tamaño fijo que se desplaza con el cursor: moverlo no obliga a repintarlo. */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  [data-glow]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      var(--glow-size) circle,
+      color-mix(in srgb, var(--accent) var(--glow-strength), transparent),
+      transparent 70%
+    );
+    translate: calc(var(--mx, 0) * 100%) calc(var(--my, 0) * 100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+  }
+
+  [data-glow]:hover::after {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes blink {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
   }
 }

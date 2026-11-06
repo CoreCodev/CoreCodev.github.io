@@ -3,15 +3,15 @@ import { skillGroups } from '../data/skills';
 ---
 
 <section id="tecnologias" class="page section">
-  <h2 class="section-title">Tecnologías</h2>
+  <h2 class="section-title" data-reveal data-letters>Tecnologías</h2>
   <div class="groups">
     {
       skillGroups.map((group) => (
         <div>
-          <h3>{group.title}</h3>
+          <h3 data-reveal>{group.title}</h3>
           <ul>
             {group.items.map((item) => (
-              <li>
+              <li data-reveal>
                 <img class:list={{ invert: item.invert }} src={item.logo} alt="" width="28" height="28" loading="lazy" />
                 {item.name}
               </li>
@@ -54,6 +54,14 @@ import { skillGroups } from '../data/skills';
     width: 1.75rem;
     height: 1.75rem;
     object-fit: contain;
+    transition: scale 0.35s var(--spring), rotate 0.35s var(--spring);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    li:hover img {
+      scale: 1.2;
+      rotate: -6deg;
+    }
   }
 
   .invert {
